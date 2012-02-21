@@ -29,13 +29,13 @@
   _.extend(Store.prototype, {
 
     // Save the current state of the **Store** to *localStorage*.
-    save: function() {
+    save: function save() {
       window.localStorage.setItem(this.name, this.records.join(","));
     },
 
     // Add a model, giving it a (hopefully)-unique GUID, if it doesn't already
     // have an id of it's own.
-    create: function(model) {
+    create: function create(model) {
       if (!model.id) model.id = model.attributes.id = guid();
       window.localStorage.setItem(this.name+"-"+model.id, JSON.stringify(model));
       this.records.push(model.id.toString());
@@ -44,26 +44,26 @@
     },
 
     // Update a model by replacing its copy in `this.data`.
-    update: function(model) {
+    update: function update(model) {
       window.localStorage.setItem(this.name+"-"+model.id, JSON.stringify(model));
       if (!_.include(this.records, model.id.toString())) this.records.push(model.id.toString()); this.save();
       return model;
     },
 
     // Retrieve a model from `this.data` by id.
-    find: function(model) {
+    find: function find(model) {
       return JSON.parse(window.localStorage.getItem(this.name+"-"+model.id));
     },
 
     // Return the array of all models currently in storage.
-    findAll: function() {
-      return _.map(this.records, function(id){return JSON.parse(window.localStorage.getItem(this.name+"-"+id));}, this);
+    findAll: function findAll() {
+      return _.map(this.records, function mapRecord(id){return JSON.parse(window.localStorage.getItem(this.name+"-"+id));}, this);
     },
 
     // Delete a model from `this.data`, returning it.
-    destroy: function(model) {
+    destroy: function destroy(model) {
       window.localStorage.removeItem(this.name+"-"+model.id);
-      this.records = _.reject(this.records, function(record_id){return record_id == model.id.toString();});
+      this.records = _.reject(this.records, function rejectRecord(record_id){return record_id == model.id.toString();});
       this.save();
       return model;
     }
@@ -72,7 +72,7 @@
 
   // localSync delegate to the model or collection's
   // *localStorage* property, which should be an instance of `Store`.
-  Backbone.localSync = function(method, model, options, error) {
+  Backbone.localSync = function localSync(method, model, options, error) {
 
     // Backwards compatibility with Backbone <= 0.3.3
     if (typeof options == 'function') {
