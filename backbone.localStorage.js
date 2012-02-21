@@ -3,7 +3,7 @@
  * https://github.com/jeromegn/Backbone.localStorage
  */
 
-// A simple module to replace `Backbone.sync` with *localStorage*-based
+// A simple module to enhance `Backbone.sync` with *localStorage*-based
 // persistence. Models are given GUIDS, and saved into a JSON object. Simple
 // as that.
 
@@ -83,6 +83,11 @@ Backbone.localSync = function(method, model, options, error) {
 
   var resp;
   var store = model.localStorage || model.collection.localStorage;
+
+  // Fallback to ajaxSync for models and collections that are not using localStorage
+  if (_.isFunction(store) === false) {
+    return Backbone.ajaxSync.call(this, method, model, options, error);
+  }
 
   switch (method) {
     case "read":    resp = model.id != undefined ? store.find(model) : store.findAll(); break;
