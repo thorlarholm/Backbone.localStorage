@@ -1,6 +1,6 @@
 # Backbone localStorage Adapter v1.0
 
-Quite simply a localStorage adapter for Backbone. It's a drop-in replacement for Backbone.Sync() to handle saving to a localStorage database.
+Quite simply a localStorage adapter for Backbone. It's a drop-in enhancement of Backbone.Sync() to handle saving to a localStorage database.
 
 ## Usage
 
@@ -11,19 +11,29 @@ Include Backbone.localStorage after having included Backbone.js:
 <script type="text/javascript" src="backbone.localStorage.js"></script>
 ```
 
-Create your collections like so:
+Create your models or collections like so:
 
 ```javascript
+window.SomeModel = Backbone.Model.extend({
+  localStorage: new Store("MyAppStore"),
+
+  // ... everything else is normal.
+});
+
 window.SomeCollection = Backbone.Collection.extend({
   
-  localStorage: new Store("SomeCollection"), // Unique name within your app.
+  localStorage: new Store("MyAppStore"), // Unique name within your app.
   
   // ... everything else is normal.
   
 });
+
+window.AnotherModel = Backbone.Model.extend({
+	// Defaults to ordinary REST-full sync since no localStorage is defined
+});
 ```
   
-Feel free to use Backbone as you usually would, this is a drop-in replacement.
+Feel free to use Backbone as you usually would, this is a drop-in enhancement.
 
 ## Credits
 
