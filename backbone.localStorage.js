@@ -22,7 +22,7 @@
   // with a meaningful name, like the name you'd give a table.
   window.Store = function Store(name) {
     this.name = name;
-    var store = localStorage.getItem(this.name);
+    var store = window.localStorage.getItem(this.name);
     this.records = (store && store.split(",")) || [];
   };
 
@@ -30,14 +30,14 @@
 
     // Save the current state of the **Store** to *localStorage*.
     save: function() {
-      localStorage.setItem(this.name, this.records.join(","));
+      window.localStorage.setItem(this.name, this.records.join(","));
     },
 
     // Add a model, giving it a (hopefully)-unique GUID, if it doesn't already
     // have an id of it's own.
     create: function(model) {
       if (!model.id) model.id = model.attributes.id = guid();
-      localStorage.setItem(this.name+"-"+model.id, JSON.stringify(model));
+      window.localStorage.setItem(this.name+"-"+model.id, JSON.stringify(model));
       this.records.push(model.id.toString());
       this.save();
       return model;
@@ -45,24 +45,24 @@
 
     // Update a model by replacing its copy in `this.data`.
     update: function(model) {
-      localStorage.setItem(this.name+"-"+model.id, JSON.stringify(model));
+      window.localStorage.setItem(this.name+"-"+model.id, JSON.stringify(model));
       if (!_.include(this.records, model.id.toString())) this.records.push(model.id.toString()); this.save();
       return model;
     },
 
     // Retrieve a model from `this.data` by id.
     find: function(model) {
-      return JSON.parse(localStorage.getItem(this.name+"-"+model.id));
+      return JSON.parse(window.localStorage.getItem(this.name+"-"+model.id));
     },
 
     // Return the array of all models currently in storage.
     findAll: function() {
-      return _.map(this.records, function(id){return JSON.parse(localStorage.getItem(this.name+"-"+id));}, this);
+      return _.map(this.records, function(id){return JSON.parse(window.localStorage.getItem(this.name+"-"+id));}, this);
     },
 
     // Delete a model from `this.data`, returning it.
     destroy: function(model) {
-      localStorage.removeItem(this.name+"-"+model.id);
+      window.localStorage.removeItem(this.name+"-"+model.id);
       this.records = _.reject(this.records, function(record_id){return record_id == model.id.toString();});
       this.save();
       return model;
